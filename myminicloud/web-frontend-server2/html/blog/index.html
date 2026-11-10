@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMiniCloud – Blog</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px auto; max-width: 860px; line-height: 1.6; padding: 0 20px; background: #f8fafc; color: #1e293b; }
+        .card { background: white; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-top: 6px solid #10b981; }
+        h1 { color: #065f46; margin-top: 0; }
+        .blog-list { list-style: none; padding: 0; margin-top: 25px; }
+        .blog-item { padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; background: #ffffff; }
+        .blog-title { font-size: 1.2em; font-weight: 600; color: #047857; text-decoration: none; display: block; margin-bottom: 6px; }
+        .blog-title:hover { text-decoration: underline; }
+        .blog-desc { color: #64748b; font-size: 0.95em; margin: 0; }
+        .btn-back { display: inline-block; background: #2563eb; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; margin-top: 20px; font-weight: 600; }
+        .btn-back:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>MyMiniCloud – Blog</h1>
+        <p>Chào mừng đến với <strong>MyMiniCloud Blog</strong> – Chuyên trang chia sẻ kiến thức học phần Điện toán đám mây (Course ID: 504087):</p>
+        
+        <ul class="blog-list">
+            <li class="blog-item">
+                <a class="blog-title" href="/blog/blog1.html">1. Tổng quan Điện toán đám mây &amp; Các mô hình dịch vụ IaaS, PaaS, SaaS</a>
+                <p class="blog-desc">Tìm hiểu kiến trúc đám mây, phân biệt trách nhiệm quản lý giữa IaaS (Amazon EC2, S3), PaaS (Elastic Beanstalk, AppSync) và SaaS (CRM, WordPress, Dropbox).</p>
+            </li>
+            <li class="blog-item">
+                <a class="blog-title" href="/blog/blog2.html">2. Ảo hóa, Container hóa với Docker &amp; Kiến trúc Microservices</a>
+                <p class="blog-desc">So sánh máy ảo truyền thống (Hypervisor) và Container (Docker), cách thiết kế mạng nội bộ cloud-net kết nối 9 máy chủ dịch vụ.</p>
+            </li>
+            <li class="blog-item">
+                <a class="blog-title" href="/blog/blog3.html">3. Giám sát hạ tầng Đám mây với Prometheus, Node Exporter &amp; Grafana</a>
+                <p class="blog-desc">Cơ chế thu thập Time-Series Metrics (CPU, Memory, Network Traffic) và trực quan hóa trên Grafana Dashboard.</p>
+            </li>
+        </ul>
+
+        <a class="btn-back" href="/">&larr; Back to Home (Quay lại Trang chính)</a>
+    </div>
+</body>
+</html>

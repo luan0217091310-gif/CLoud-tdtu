@@ -1,0 +1,25 @@
+server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  add_header X-Load-Balancer-Node "web-frontend-server1" always;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location ^~ /blog/ {
+    alias /usr/share/nginx/html/blog/;
+    index index.html;
+    autoindex off;
+  }
+
+  # Endpoint /metrics cho Prometheus scrape target 'web' (Yêu cầu mở rộng số 7)
+  location = /metrics {
+    default_type text/plain;
+    return 200 "# HELP nginx_up Whether the Web Frontend Nginx server is up (1 = UP)\n# TYPE nginx_up gauge\nnginx_up{server=\"web-frontend-server1\"} 1\n# HELP nginx_http_requests_total Total HTTP requests served by Web Frontend\n# TYPE nginx_http_requests_total counter\nnginx_http_requests_total{server=\"web-frontend-server1\"} 120\n";
+  }
+}
+

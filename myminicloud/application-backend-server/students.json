@@ -1,0 +1,33 @@
+[
+  {
+    "id": "SV001",
+    "name": "Nguyễn Văn An",
+    "major": "Điện toán đám mây (Cloud Computing)",
+    "gpa": 3.85
+  },
+  {
+    "id": "SV002",
+    "name": "Trần Thị Bình",
+    "major": "Kỹ thuật Phần mềm (Software Engineering)",
+    "gpa": 3.72
+  },
+  {
+    "id": "SV003",
+    "name": "Lê Hoàng Cường",
+    "major": "An toàn Thông tin (Cyber Security)",
+    "gpa": 3.68
+  },
+  {
+    "id": "SV004",
+    "name": "Phạm Minh Dung",
+    "major": "Trí tuệ Nhân tạo (Artificial Intelligence)",
+    "gpa": 3.91
+  },
+  {
+    "id": "SV005",
+    "name": "Hoàng Quốc Đạt",
+    "major": "Hệ thống Thông tin (Information Systems)",
+    "gpa": 3.60
+  }
+]
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2: Ảo hóa, Container hóa với Docker &amp; Microservices - MyMiniCloud Blog</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 40px auto; max-width: 860px; line-height: 1.7; padding: 0 20px; background: #f8fafc; color: #1e293b; }
+        .article { background: white; padding: 36px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border-top: 6px solid #10b981; }
+        h1 { color: #065f46; margin-top: 0; }
+        h2 { color: #047857; margin-top: 24px; }
+        .meta { color: #64748b; font-size: 0.9em; margin-bottom: 20px; }
+        .illustration { margin: 24px 0; text-align: center; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; background: #f8fafc; }
+        .illustration img { max-width: 100%; height: auto; border-radius: 8px; }
+        .nav-links { margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; }
+        .btn { display: inline-block; background: #10b981; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; }
+        .btn-secondary { background: #475569; }
+    </style>
+</head>
+<body>
+    <div class="article">
+        <h1>Bài 2: Ảo hóa, Container hóa với Docker &amp; Kiến trúc Microservices</h1>
+        <div class="meta">Chuyên mục: Công nghệ Hạ tầng &amp; Ảo hóa (Chapters 2, 8, 9)</div>
+        
+        <div class="illustration">
+            <img src="/blog/images/docker-arch.svg" alt="Kiến trúc mạng nội bộ cloud-net trong MyMiniCloud">
+            <p><small>Hình 2: Sơ đồ kết nối 9 máy chủ dịch vụ qua mạng ảo Docker Bridge (cloud-net)</small></p>
+        </div>
+
+        <h2>1. Từ Ảo hóa Phần cứng (Hypervisor) đến Container hóa (Docker)</h2>
+        <p>Trong Chương 9 (Virtualization), ảo hóa truyền thống sử dụng Hypervisor (Type 1 như VMware ESXi, KVM, Xen hoặc Type 2 như VirtualBox) để tạo ra các Máy ảo (Virtual Machines) có hệ điều hành Guest OS riêng biệt. Ngược lại, <strong>Container hóa (Docker)</strong> thực hiện ảo hóa ở tầng hệ điều hành (OS-level virtualization), chia sẻ chung nhân Linux Kernel của máy chủ vật lý thông qua cơ chế <em>Namespaces</em> (cô lập tài nguyên) và <em>Cgroups</em> (giới hạn CPU/RAM).</p>
+
+        <h2>2. Kiến trúc mạng nội bộ cloud-net và Reverse Proxy</h2>
+        <p>Toàn bộ 9 máy chủ trong hệ thống MyMiniCloud giao tiếp thông qua mạng cầu nối tùy chỉnh <code>cloud-net</code>. Việc sử dụng <strong>Nginx API Gateway &amp; Reverse Proxy</strong> ở cổng 80 giúp thống nhất điểm truy cập duy nhất:</p>
+        <ul>
+            <li>Định tuyến đường dẫn gốc <code>/</code> về cụm Web Frontend với thuật toán cân bằng tải <strong>Round Robin</strong> giữa <code>web-frontend-server1</code> và <code>web-frontend-server2</code>.</li>
+            <li>Định tuyến <code>/api/</code> và <code>/student/</code> về máy chủ ứng dụng Flask Backend (<code>application-backend-server:8081</code>).</li>
+            <li>Định tuyến <code>/auth/</code> về máy chủ định danh Keycloak OIDC (<code>authentication-identity-server:8080</code>).</li>
+        </ul>
+
+        <div class="nav-links">
+            <a class="btn" href="/">&larr; Quay lại Trang chính (Home)</a>
+            <a class="btn btn-secondary" href="/blog/">Danh sách Blog (/blog/)</a>
+            <a class="btn" href="/blog/blog3.html">Đọc tiếp Bài 3 &rarr;</a>
+        </div>
+    </div>
+</body>
+</html>
+
