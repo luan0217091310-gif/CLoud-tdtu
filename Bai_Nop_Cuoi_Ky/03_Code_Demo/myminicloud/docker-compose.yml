@@ -1,0 +1,245 @@
+networks:
+  cloud-net:
+    name: cloud-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24
+          ip_range: 10.10.10.128/25
+
+volumes:
+  mariadb-data:
+  keycloak-data:
+  minio-data:
+  prometheus-data:
+  grafana-data:
+
+services:
+  web-frontend-server:
+    build: ./web-frontend-server
+    image: myminicloud/web:demo
+    container_name: web-frontend-server
+    ports: ["127.0.0.1:8080:80"]
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.10
+        aliases: [web, web-server, web-frontend-server1]
+    restart: unless-stopped
+
+  web-frontend-server2:
+    build: ./web-frontend-server2
+    image: myminicloud/web2:demo
+    container_name: web-frontend-server2
+    ports: ["127.0.0.1:8082:80"]
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.11
+        aliases: [web2]
+    restart: unless-stopped
+
+  application-backend-server:
+    build: ./application-backend-server
+    image: myminicloud/app:demo
+    container_name: application-backend-server
+    ports: ["127.0.0.1:8085:8081"]
+    environment:
+      KEYCLOAK_INTERNAL_URL: http://authentication-identity-server:8080/auth
+      ALLOWED_REALMS: "realm_${DEMO_STUDENT_ID:-demo0000},master"
+      OIDC_PUBLIC_BASE_URL: "${OIDC_PUBLIC_BASE_URL:-}"
+      DB_HOST: relational-database-server
+      DB_PORT: "3306"
+      DB_USER: root
+      DB_PASSWORD: "${MARIADB_ROOT_PASSWORD:?Run python setup_demo.py}"
+      DB_NAME: studentdb
+    depends_on:
+      relational-database-server:
+        condition: service_healthy
+      authentication-identity-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8081/hello"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.20
+        aliases: [app, app-server, app-backend]
+    restart: unless-stopped
+
+  relational-database-server:
+    image: mariadb:11.4.9
+    container_name: relational-database-server
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MARIADB_ROOT_PASSWORD:?Run python setup_demo.py}"
+      MARIADB_DATABASE: minicloud
+    volumes:
+      - ./relational-database-server/init:/docker-entrypoint-initdb.d:ro
+      - mariadb-data:/var/lib/mysql
+    ports: ["127.0.0.1:${DB_HOST_PORT:-3306}:3306"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 4s
+      start_period: 25s
+      retries: 20
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.50
+        aliases: [db, mariadb, mysql]
+    restart: unless-stopped
+
+  authentication-identity-server:
+    image: quay.io/keycloak/keycloak:26.4.7
+    container_name: authentication-identity-server
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: "${KC_ADMIN_USER:-admin}"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "${KC_ADMIN_PASSWORD:?Run python setup_demo.py}"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      DEMO_STUDENT_ID: "${DEMO_STUDENT_ID:-demo0000}"
+      DEMO_SV01_PASSWORD: "${DEMO_SV01_PASSWORD:?Run python setup_demo.py}"
+      DEMO_SV02_PASSWORD: "${DEMO_SV02_PASSWORD:?Run python setup_demo.py}"
+      KC_HTTP_MANAGEMENT_RELATIVE_PATH: /
+    volumes:
+      - ./.demo/realms:/opt/keycloak/data/import:ro
+      - keycloak-data:/opt/keycloak/data
+    ports: ["127.0.0.1:8081:8080"]
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -ec
+        - >-
+          exec 3<>/dev/tcp/127.0.0.1/9000;
+          printf 'GET /health/ready HTTP/1.0\r\n\r\n' >&3;
+          read -r line <&3;
+          [[ "$$line" == *" 200 "* ]]
+      interval: 5s
+      timeout: 4s
+      start_period: 75s
+      retries: 24
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.40
+        aliases: [keycloak, auth, auth-server]
+    restart: unless-stopped
+
+  object-storage-server:
+    image: "${MINIO_IMAGE:-cgr.dev/chainguard/minio:latest}"
+    container_name: object-storage-server
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?Run python setup_demo.py}"
+    volumes:
+      - minio-data:/data
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.30
+        aliases: [minio, storage]
+    restart: unless-stopped
+
+  internal-dns-server:
+    image: internetsystemsconsortium/bind9:9.18
+    container_name: internal-dns-server
+    ports: ["127.0.0.1:1053:53/udp", "127.0.0.1:1053:53/tcp"]
+    volumes:
+      - ./internal-dns-server/named.conf:/etc/bind/named.conf:ro
+      - ./internal-dns-server/named.conf.options:/etc/bind/named.conf.options:ro
+      - ./internal-dns-server/named.conf.local:/etc/bind/named.conf.local:ro
+      - ./internal-dns-server/db.cloud.local:/etc/bind/db.cloud.local:ro
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.53
+        aliases: [dns, dns-server, bind9]
+    restart: unless-stopped
+
+  monitoring-node-exporter-server:
+    image: prom/node-exporter:v1.9.1
+    container_name: monitoring-node-exporter-server
+    ports: ["127.0.0.1:9100:9100"]
+    networks:
+      cloud-net:
+        aliases: [node-exporter]
+    restart: unless-stopped
+
+  monitoring-prometheus-server:
+    image: prom/prometheus:v3.5.0
+    container_name: monitoring-prometheus-server
+    ports: ["127.0.0.1:9090:9090"]
+    volumes:
+      - ./monitoring-prometheus-server/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.60
+        aliases: [prometheus]
+    restart: unless-stopped
+
+  monitoring-grafana-dashboard-server:
+    image: grafana/grafana:12.1.1
+    container_name: monitoring-grafana-dashboard-server
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:?Run python setup_demo.py}"
+    volumes:
+      - ./monitoring-grafana-dashboard-server/provisioning:/etc/grafana/provisioning:ro
+      - ./.demo/dashboards:/etc/grafana/lab-dashboards:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.70
+        aliases: [grafana]
+    restart: unless-stopped
+
+  api-gateway-proxy-server:
+    image: nginx:1.28.2-alpine
+    container_name: api-gateway-proxy-server
+    depends_on:
+      web-frontend-server:
+        condition: service_started
+      web-frontend-server2:
+        condition: service_started
+      application-backend-server:
+        condition: service_healthy
+      authentication-identity-server:
+        condition: service_healthy
+    ports: ["${GATEWAY_BIND_IP:-127.0.0.1}:80:80"]
+    volumes:
+      - ./api-gateway-proxy-server/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      cloud-net:
+        ipv4_address: 10.10.10.80
+        aliases: [proxy, gateway]
+    restart: unless-stopped
+
+  monitoring-nginx-exporter-server:
+    image: nginx/nginx-prometheus-exporter:1.4.2
+    container_name: monitoring-nginx-exporter-server
+    command: ["--nginx.scrape-uri=http://web-frontend-server/nginx_status"]
+    depends_on:
+      - web-frontend-server
+    networks: [cloud-net]
+    restart: unless-stopped
+
+  object-storage-client:
+    image: "${MINIO_CLIENT_IMAGE:-cgr.dev/chainguard/minio-client:latest-dev}"
+    profiles: [tools]
+    entrypoint: ["/bin/sh", "/init-storage.sh"]
+    environment:
+      MC_CONFIG_DIR: /tmp/minicloud-mc
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:-minioadmin}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?Run python setup_demo.py}"
+    volumes:
+      - ./object-storage-server/init-storage.sh:/init-storage.sh:ro
+      - ./object-storage-server/avatar-policy.json:/avatar-policy.json:ro
+      - ./object-storage-server/sample-files:/samples:ro
+      - ./web-frontend-server/html/index.html:/web/index.html:ro
+    networks: [cloud-net]

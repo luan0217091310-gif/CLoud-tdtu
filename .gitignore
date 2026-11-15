@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+~$*.docx
+~$*.pptx
+.env
+.env.*
+.demo/
+test-results*.txt
+**/object-storage-server/data/*
+!**/object-storage-server/data/.gitkeep
+**/object-storage-server/sample-files/avatar.jpg

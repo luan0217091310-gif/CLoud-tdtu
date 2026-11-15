@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light;
+  --paper: #faf7ee;
+  --band: #eee9da;
+  --ink: #242d27;
+  --muted: #505c54;
+  --green: #145244;
+  --rust: #733b2d;
+  --line: #a6ae9d;
+  --measure: 67rem;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, "Segoe UI", sans-serif;
+  --mono: "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 var(--sans); }
+a { color: var(--green); text-underline-offset: .2em; text-decoration-thickness: .08em; }
+a:hover { color: var(--rust); }
+a:focus-visible { outline: .16rem solid var(--rust); outline-offset: .24rem; }
+p, h1, h2 { margin-top: 0; }
+h1, h2 { color: var(--green); font-family: var(--serif); font-weight: 700; line-height: 1.13; }
+h1 { font-size: clamp(2.25rem, 5.25vw, 4.8rem); letter-spacing: -.045em; margin-bottom: 1.1rem; }
+h2 { font-size: clamp(1.55rem, 3vw, 2.3rem); margin-bottom: .75rem; }
+.wrap { width: min(calc(100% - 2.5rem), var(--measure)); margin-inline: auto; }
+.skip-link { position: absolute; top: -5rem; left: 1rem; background: var(--paper); padding: .65rem; }
+.skip-link:focus { top: .5rem; z-index: 2; }
+.site-header { border-bottom: 1px solid var(--line); }
+.header-inner { min-height: 4.75rem; display: flex; justify-content: space-between; align-items: center; gap: 1.25rem; }
+.wordmark { font: 700 1.45rem/1 var(--serif); letter-spacing: -.025em; text-decoration: none; }
+.site-header nav { display: flex; gap: 1.5rem; font-size: .95rem; }
+.site-header nav a:not([aria-current]) { text-decoration: none; }
+.site-header nav a:hover { text-decoration: underline; }
+.intro { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2.45rem, 6vw, 4.25rem); display: grid; grid-template-columns: 1fr 15rem; gap: 2rem; align-items: end; }
+.intro.single { grid-template-columns: 1fr; }
+.kicker { font-size: .9rem; font-weight: 650; color: var(--rust); letter-spacing: .025em; margin-bottom: 1rem; }
+.lead { max-width: 41rem; font-size: clamp(1.06rem, 2.4vw, 1.27rem); color: var(--muted); margin-bottom: 0; }
+.node { border-inline-start: .17rem solid var(--green); background: var(--band); padding: .95rem 1.15rem; }
+.node span, .node strong, .node small { display: block; }
+.node span, .node small { color: var(--muted); }
+.node strong { font: 700 1.5rem/1.3 var(--mono); color: var(--green); margin: .2rem 0; }
+.article-section { padding-bottom: clamp(3rem, 8vw, 6rem); }
+.section-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; column-gap: 1.5rem; }
+.article-list { padding: 0; margin: 0; list-style: none; border-block-end: 1px solid var(--line); }
+.article-list li { padding: 1.25rem 0; border-block-start: 1px solid var(--line); display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; }
+time, .byline, .backlink { color: var(--muted); font-size: .92rem; }
+.article-list li a { font: 700 clamp(1.3rem, 3vw, 1.9rem)/1.25 var(--serif); }
+.article-list li p { margin: .42rem 0 0; color: var(--muted); }
+.reading { width: min(100%, 48rem); margin: 3rem auto 5rem; }
+.reading h1 { font-size: clamp(2.2rem, 4.8vw, 4.25rem); }
+.reading h2 { margin-bottom: .6rem; }
+.reading .article-body { max-width: 44rem; }
+.reading figure { margin: 2rem 0 2.3rem; border-block: 1px solid var(--line); padding: 1.15rem; }
+.reading img { display: block; width: min(100%, 42rem); margin-inline: auto; height: auto; }
+code { color: var(--green); font-family: var(--mono); overflow-wrap: anywhere; }
+pre { background: var(--band); padding: 1rem; border-inline-start: .14rem solid var(--green); overflow: auto; font-size: .9rem; }
+pre code { overflow-wrap: normal; }
+.article-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; padding-block-start: 1rem; border-top: 1px solid var(--line); }
+.site-footer { padding-block: 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
+@media (max-width: 41rem) {
+  .intro { grid-template-columns: 1fr; align-items: start; }
+  .node { width: min(100%, 20rem); }
+  .site-header nav { gap: 1rem; }
+  .article-list li { grid-template-columns: 1fr; gap: .25rem; }
+  .reading { margin-top: 2rem; }
+}

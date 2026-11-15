@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mạng và cổng trong Docker Compose · MyMiniCloud</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Đến nội dung</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="/">MyMiniCloud</a>
+      <nav aria-label="Điều hướng chính">
+        <a href="/" aria-current='page'>Trang chủ</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    <article class="reading">
+      <p class="backlink"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></p>
+      <h1>Mạng và cổng trong Docker Compose</h1>
+      <p class="byline">Nhóm MyMiniCloud · <time datetime="2026-11-15">15.11.2026</time></p>
+      <p class="lead">Theo dấu một yêu cầu từ cổng 80 của máy chủ vào hai máy web trong cloud-net.</p>
+      <figure>
+        <img src="/blog/images/docker-arch.svg" alt="Sơ đồ Docker Compose, mạng nội bộ và các container dịch vụ">
+      </figure>
+      <div class="article-body">
+          <h2>Cổng máy chủ và cổng container</h2>
+          <p>Cấu hình <code>8080:80</code> trên frontend nối cổng 8080 của máy chủ với cổng 80 bên trong container. Máy khác trong <code>cloud-net</code> gọi <code>web-frontend-server:80</code> bằng tên dịch vụ Docker. Hai địa chỉ phục vụ hai phạm vi truy cập khác nhau.</p>
+          <h2>Hai node web sau gateway</h2>
+          <p>Nginx ở cổng 80 dùng nhóm <code>web_cluster</code> gồm <code>web-frontend-server</code> và <code>web-frontend-server2</code>. Hai node dùng cùng nội dung. Header <code>X-Load-Balancer-Node</code> và nhãn Instance xác định node phục vụ từng yêu cầu.</p>
+          <pre><code>docker compose ps
+for i in 1 2 3 4; do
+  curl -sI http://localhost/ | grep -i x-load-balancer-node
+done</code></pre>
+          <p>Khi cả hai node sẵn sàng, nhóm yêu cầu tuần tự cho thấy hai tên luân phiên. File <code>docker-compose.yml</code> khai báo dải mạng và địa chỉ mà BIND trả lời cho các tên <code>*.cloud.local</code>.</p>
+        </div>
+      <nav class="article-nav" aria-label="Điều hướng bài viết"><a href="/blog/">Danh sách bài</a><a rel="next" href="/blog/blog2.html">Bài sau</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="wrap">Đồ án Điện toán đám mây · Khoa Công nghệ Thông tin, TDTU</div></footer>
+</body>
+</html>

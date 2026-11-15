@@ -1,0 +1,63 @@
+{
+  "realm": "realm_demo0000",
+  "enabled": true,
+  "sslRequired": "NONE",
+  "displayName": "MyMiniCloud demo realm",
+  "accessTokenLifespan": 300,
+  "clients": [
+    {
+      "clientId": "flask-app",
+      "name": "Flask Application Backend Client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "flask-app audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.custom.audience": "flask-app",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "sv01",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Account 01",
+      "email": "sv01@example.invalid",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${DEMO_SV01_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "sv02",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Account 02",
+      "email": "sv02@example.invalid",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${DEMO_SV02_PASSWORD}",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

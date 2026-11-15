@@ -1,0 +1,8 @@
+FROM python:3.11-alpine
+WORKDIR /app
+RUN apk add --no-cache bind-tools curl iputils
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py students.json ./
+EXPOSE 8081
+CMD ["python", "app.py"]

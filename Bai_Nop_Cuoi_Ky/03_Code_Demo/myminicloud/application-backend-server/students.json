@@ -1,0 +1,32 @@
+[
+  {
+    "id": "SAMPLE001",
+    "name": "Sample Student 01",
+    "major": "Cloud Computing",
+    "gpa": 3.85
+  },
+  {
+    "id": "SAMPLE002",
+    "name": "Sample Student 02",
+    "major": "Software Engineering",
+    "gpa": 3.72
+  },
+  {
+    "id": "SAMPLE003",
+    "name": "Sample Student 03",
+    "major": "Information Security",
+    "gpa": 3.68
+  },
+  {
+    "id": "SAMPLE004",
+    "name": "Sample Student 04",
+    "major": "Artificial Intelligence",
+    "gpa": 3.91
+  },
+  {
+    "id": "SAMPLE005",
+    "name": "Sample Student 05",
+    "major": "Information Systems",
+    "gpa": 3.6
+  }
+]

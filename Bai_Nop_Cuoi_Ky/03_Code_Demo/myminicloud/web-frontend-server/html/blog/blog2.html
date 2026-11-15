@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API, cơ sở dữ liệu và xác thực · MyMiniCloud</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Đến nội dung</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="/">MyMiniCloud</a>
+      <nav aria-label="Điều hướng chính">
+        <a href="/" aria-current='page'>Trang chủ</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    <article class="reading">
+      <p class="backlink"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></p>
+      <h1>API, cơ sở dữ liệu và xác thực</h1>
+      <p class="byline">Nhóm MyMiniCloud · <time datetime="2026-11-15">15.11.2026</time></p>
+      <p class="lead">Cách Flask ghép JSON tĩnh, dữ liệu MariaDB và access token do Keycloak phát hành.</p>
+      <figure>
+        <img src="/blog/images/cloud-models.svg" alt="Các lớp dịch vụ hạ tầng, nền tảng và phần mềm trong mô hình đám mây">
+      </figure>
+      <div class="article-body">
+          <h2>Hai nguồn dữ liệu của Flask</h2>
+          <p><code>/api/student</code> đọc năm bản ghi mẫu từ <code>students.json</code>. <code>/api/students-db</code> đọc bảng <code>studentdb.students</code> trong MariaDB. Các yêu cầu ghi dùng câu lệnh SQL có tham số và kiểm tra trường bắt buộc.</p>
+          <h2>Access token cho API bảo vệ</h2>
+          <p>Keycloak quản lý <code>realm_demo0000</code>, hai tài khoản demo và client <code>flask-app</code>. Flask kiểm tra chữ ký RS256 từ JWKS nội bộ, hạn dùng, issuer, audience và client trong token trước khi phục vụ <code>/api/secure</code>.</p>
+          <pre><code>curl http://localhost/api/student
+curl http://localhost/api/students-db
+curl -i http://localhost/api/secure</code></pre>
+          <p>Lệnh thứ ba gửi yêu cầu không có token. Mã mong đợi là 401. Chạy <code>test_all.py</code> để kiểm tra cả token hợp lệ lấy qua Keycloak trực tiếp và qua gateway.</p>
+        </div>
+      <nav class="article-nav" aria-label="Điều hướng bài viết"><a rel="prev" href="/blog/blog1.html">Bài trước</a><a rel="next" href="/blog/blog3.html">Bài sau</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="wrap">Đồ án Điện toán đám mây · Khoa Công nghệ Thông tin, TDTU</div></footer>
+</body>
+</html>

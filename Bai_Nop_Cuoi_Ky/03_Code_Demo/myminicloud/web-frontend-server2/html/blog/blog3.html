@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Đọc số liệu của Prometheus và Grafana · MyMiniCloud</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Đến nội dung</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="/">MyMiniCloud</a>
+      <nav aria-label="Điều hướng chính">
+        <a href="/" aria-current='page'>Trang chủ</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </div>
+  </header>
+  <main id="content" class="wrap">
+    <article class="reading">
+      <p class="backlink"><a href="/">Trang chủ</a> / <a href="/blog/">Blog</a></p>
+      <h1>Đọc số liệu của Prometheus và Grafana</h1>
+      <p class="byline">Nhóm MyMiniCloud · <time datetime="2026-11-15">15.11.2026</time></p>
+      <p class="lead">Cách kiểm tra target đang hoạt động và chuyển bộ đếm tích lũy thành tốc độ theo giây.</p>
+      <figure>
+        <img src="/blog/images/monitoring-stack.svg" alt="Luồng số liệu từ trình xuất metric sang Prometheus và Grafana">
+      </figure>
+      <div class="article-body">
+          <h2>Nguồn số liệu</h2>
+          <p>Prometheus định kỳ lấy số liệu của Node Exporter từ job <code>node</code>. Job <code>web</code> kiểm tra endpoint sức khỏe của frontend. Job <code>web-nginx-exporter</code> lấy kết nối và số yêu cầu do Nginx đo tại <code>stub_status</code>.</p>
+          <h2>Đơn vị trên dashboard</h2>
+          <p>Tỉ lệ CPU đang dùng lấy một trừ phần thời gian nhàn rỗi tính trên cửa sổ một phút. Lưu lượng nhận và gửi dùng <code>rate()</code> để có đơn vị byte/giây. Bộ nhớ đang dùng là hiệu giữa tổng bộ nhớ và phần còn khả dụng.</p>
+          <pre><code>curl http://localhost:9090/api/v1/targets
+curl http://localhost:8080/metrics</code></pre>
+          <p>Trong Grafana, chọn <strong>System Health of DEMO0000</strong> để xem ba biểu đồ của đồ án. Bảng điều khiển <strong>Node Exporter Full</strong> có thêm các chỉ số hệ thống tùy collector.</p>
+        </div>
+      <nav class="article-nav" aria-label="Điều hướng bài viết"><a rel="prev" href="/blog/blog2.html">Bài trước</a><a href="/blog/">Danh sách bài</a></nav>
+    </article>
+  </main>
+  <footer class="site-footer"><div class="wrap">Đồ án Điện toán đám mây · Khoa Công nghệ Thông tin, TDTU</div></footer>
+</body>
+</html>
