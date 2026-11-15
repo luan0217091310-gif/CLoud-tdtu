@@ -57,11 +57,12 @@ def prepare(student_id=None):
     existing = read_env()
     values = existing.copy()
     if student_id is None:
-        student_id = os.getenv("DEMO_STUDENT_ID") or values.get("DEMO_STUDENT_ID") or "demo0000"
+        student_id = os.getenv("DEMO_STUDENT_ID") or values.get("DEMO_STUDENT_ID") or "524h0167"
     if not re.fullmatch("[A-Za-z0-9]{1,16}", student_id):
         raise ValueError("The student ID must contain 1 to 16 letters or numbers.")
     suffix = student_id.lower()
     values["DEMO_STUDENT_ID"] = suffix
+    values.setdefault("DOCKERHUB_USER", "bekanesiucapcute")
     for key in PASSWORD_KEYS:
         if not values.get(key):
             values[key] = secrets.token_hex(18)

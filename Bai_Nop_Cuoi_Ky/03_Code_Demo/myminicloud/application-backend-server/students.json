@@ -1,32 +1,32 @@
 [
   {
-    "id": "SAMPLE001",
-    "name": "Sample Student 01",
+    "id": "524H0167",
+    "name": "Phùng Hữu Luân",
     "major": "Cloud Computing",
     "gpa": 3.85
   },
   {
-    "id": "SAMPLE002",
-    "name": "Sample Student 02",
+    "id": "524H0169",
+    "name": "Ngô Bình Minh",
     "major": "Software Engineering",
+    "gpa": 3.8
+  },
+  {
+    "id": "524H0050",
+    "name": "Ngô Đặng Trọng Hiếu",
+    "major": "Information Security",
+    "gpa": 3.78
+  },
+  {
+    "id": "524H0150",
+    "name": "Nguyễn Văn An",
+    "major": "Artificial Intelligence",
     "gpa": 3.72
   },
   {
-    "id": "SAMPLE003",
-    "name": "Sample Student 03",
-    "major": "Information Security",
-    "gpa": 3.68
-  },
-  {
-    "id": "SAMPLE004",
-    "name": "Sample Student 04",
-    "major": "Artificial Intelligence",
-    "gpa": 3.91
-  },
-  {
-    "id": "SAMPLE005",
-    "name": "Sample Student 05",
+    "id": "524H0155",
+    "name": "Trần Thị Bình",
     "major": "Information Systems",
-    "gpa": 3.6
+    "gpa": 3.68
   }
 ]

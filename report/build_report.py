@@ -182,8 +182,10 @@ def cover(doc, logo_path, secondary=False):
     picture.paragraph_format.space_before = Pt(20)
     picture.paragraph_format.space_after = Pt(22)
     picture.add_run().add_picture(str(logo_path), width=Cm(4.4))
-    line("[ENTER STUDENT NAMES AND STUDENT IDS]", bold=True)
-    line("FINAL REPORT", size=23, bold=True, before=34, after=20)
+    line("PHÙNG HỮU LUÂN – MSSV: 524H0167", bold=True)
+    line("NGÔ BÌNH MINH – MSSV: 524H0169", bold=True)
+    line("NGÔ ĐẶNG TRỌNG HIẾU – MSSV: 524H0050", bold=True)
+    line("FINAL REPORT", size=23, bold=True, before=28, after=20)
     line("DESIGN AND SIMULATION OF\nMYMINICLOUD", size=21, bold=True, after=17)
     line("Cloud Computing (504087)", size=14)
     if secondary:
@@ -276,7 +278,14 @@ def preliminary(doc, pages, logo_path):
     front(doc, "DECLARATION OF AUTHORSHIP",
           "The team takes responsibility for the source code, report and results presented in this submission. The References section identifies the external documentation and configurations used in the project.",
           "The demonstration evidence refers to the source revision and environment in which it was collected. Fields for evidence, external links and student details are marked for completion in this editable copy.")
-    paragraphs(doc, "[ENTER: Date and signatures of the team members]")
+    paragraphs(
+        doc,
+        "Ho Chi Minh City, 15 November 2026\n"
+        "Team members:\n"
+        "- Phùng Hữu Luân (524H0167)\n"
+        "- Ngô Bình Minh (524H0169)\n"
+        "- Ngô Đặng Trọng Hiếu (524H0050)",
+    )
     doc.add_page_break()
     front(doc, "ABSTRACT",
           "MyMiniCloud is a single-host cloud infrastructure simulation built with Docker Compose. Nine server roles share the cloud-net bridge network. An Nginx gateway routes requests to Flask, Keycloak and two static web replicas. MariaDB stores relational data, MinIO provides object storage and BIND 9 resolves internal names. Prometheus collects metrics and Grafana displays them.",
@@ -462,7 +471,7 @@ def ch_demo(doc, ci):
     paragraphs(doc,
         "Use an Ubuntu EC2 instance with a public address and permission to install Docker. Set the security group to allow SSH from the team's address and HTTP port 80 for the demonstration [11]. Copy the source to EC2 and run the deployment script from myminicloud.")
     code(doc, 'bash deploy_ec2.sh\ncurl -fsS "http://${PUBLIC_HOST}/api/hello"')
-    paragraphs(doc, "Public gateway verified by the team. [ENTER: EC2 public IPv4 address or DNS name]")
+    paragraphs(doc, "Public gateway verified by the team. http://47.129.198.197/ (ec2-47-129-198-197.ap-southeast-1.compute.amazonaws.com)")
     evidence(doc, FIGURES[-2], "Running EC2 instance, security group and public gateway response")
     paragraphs(doc, "Set DOCKERHUB_USER and select --push to tag and publish the custom image to Docker Hub. Sign in at the Docker CLI prompt.")
     code(doc, 'DOCKERHUB_USER="YOUR_USERNAME" bash deploy_ec2.sh --push')
@@ -531,10 +540,16 @@ def references_and_appendices(doc, ci):
 
     heading(doc, CHAPTERS[6], 1, new_page=True)
     paragraphs(doc,
-        "Docker Hub repository. [ENTER: Published repository URL]",
-        "Published tag or image digest. [ENTER: Tag or digest]",
-        "EC2 endpoint. [ENTER: Public URL verified from outside the instance]",
-        "The web-frontend-server Dockerfile builds myminicloud/web:demo locally. Section 4.12 describes how to tag and push the image.")
+        "Docker Hub repositories:\n"
+        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-web\n"
+        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-web2\n"
+        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-app",
+        "Published tags and digests:\n"
+        "- bekanesiucapcute/myminicloud-web:demo (sha256:13f02d61464b2f410aab358fad486a44b5399eeee823d93e1958b6273c8b84ac)\n"
+        "- bekanesiucapcute/myminicloud-web2:demo (sha256:e8809c1369c2a0cf75a2fe3613301bdd5259a95d6bcf9976b2473e2da3166df8)\n"
+        "- bekanesiucapcute/myminicloud-app:demo (sha256:87f5a173c4c063a6a0c0de4b95ae7823567266696fe6338a219c15ba07dfb7b3)",
+        "EC2 endpoint: http://47.129.198.197/ (Instance i-02017cafcd74a7368, ap-southeast-1c)",
+        "The custom Dockerfiles build myminicloud-web:demo, myminicloud-web2:demo and myminicloud-app:demo and publish them to Docker Hub under the bekanesiucapcute namespace.")
     heading(doc, CHAPTERS[7], 1)
     paragraphs(doc, "Demonstration recording. [ENTER: Video URL and viewing permissions]")
     heading(doc, CHAPTERS[8], 1)

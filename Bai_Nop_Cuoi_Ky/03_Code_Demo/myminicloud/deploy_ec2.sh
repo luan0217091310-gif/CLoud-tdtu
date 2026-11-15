@@ -32,6 +32,15 @@ DOCKER_SOURCE
   sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 fi
 sudo systemctl enable --now docker
+
+if ! swapon --show | grep -q '/swapfile'; then
+  sudo fallocate -l 4G /swapfile || sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+  grep -q '/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+fi
+
 python3 setup_demo.py
 
 if [[ -z "${PUBLIC_HOST:-}" ]]; then
@@ -61,9 +70,11 @@ curl -fsS http://127.0.0.1/api/hello
 printf '\nGateway demo: http://%s/\n' "$PUBLIC_HOST"
 
 if (( publish )); then
-  image="$DOCKERHUB_USER/myminicloud-web:demo"
   "${docker_cmd[@]}" login --username "$DOCKERHUB_USER"
-  "${docker_cmd[@]}" tag myminicloud/web:demo "$image"
-  "${docker_cmd[@]}" push "$image"
-  printf 'Docker Hub: https://hub.docker.com/r/%s/myminicloud-web\n' "$DOCKERHUB_USER"
+  for repo in myminicloud-web myminicloud-web2 myminicloud-app; do
+    image="$DOCKERHUB_USER/$repo:demo"
+    "${docker_cmd[@]}" tag "${DOCKERHUB_USER:-myminicloud}/$repo:demo" "$image"
+    "${docker_cmd[@]}" push "$image"
+    printf 'Docker Hub: https://hub.docker.com/r/%s/%s\n' "$DOCKERHUB_USER" "$repo"
+  done
 fi

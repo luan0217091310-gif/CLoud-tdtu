@@ -14,17 +14,17 @@ CREATE TABLE IF NOT EXISTS students (
 
 -- Chèn dữ liệu mẫu (CREATE / INSERT)
 INSERT INTO students (student_id, fullname, dob, major) VALUES
-  ('SAMPLE001', 'Sample Student 01', '2000-01-01', 'Cloud Computing'),
-  ('SAMPLE002', 'Sample Student 02', '2000-01-02', 'Software Engineering'),
-  ('SAMPLE003', 'Sample Student 03', '2000-01-03', 'Information Security'),
-  ('SAMPLE004', 'Sample Student 04', '2000-01-04', 'Artificial Intelligence'),
-  ('SAMPLE005', 'Sample Student 05', '2000-01-05', 'Information Systems'),
+  ('524H0167', 'Phùng Hữu Luân', '2006-01-01', 'Cloud Computing'),
+  ('524H0169', 'Ngô Bình Minh', '2006-01-02', 'Software Engineering'),
+  ('524H0050', 'Ngô Đặng Trọng Hiếu', '2006-01-03', 'Information Security'),
+  ('524H0150', 'Nguyễn Văn An', '2006-01-04', 'Artificial Intelligence'),
+  ('524H0155', 'Trần Thị Bình', '2006-01-05', 'Information Systems'),
   ('SEEDTEST', 'Temporary Seed Row', '2000-01-31', 'Test');
 
 -- Thực hành truy vấn cập nhật (UPDATE)
 UPDATE students
 SET major = 'Cloud and Distributed Systems'
-WHERE student_id = 'SAMPLE001';
+WHERE student_id = '524H0167';
 
 -- Thực hành truy vấn xóa (DELETE)
 DELETE FROM students

@@ -17,7 +17,7 @@ volumes:
 services:
   web-frontend-server:
     build: ./web-frontend-server
-    image: myminicloud/web:demo
+    image: "${DOCKERHUB_USER:-bekanesiucapcute}/myminicloud-web:demo"
     container_name: web-frontend-server
     ports: ["127.0.0.1:8080:80"]
     networks:
@@ -28,7 +28,7 @@ services:
 
   web-frontend-server2:
     build: ./web-frontend-server2
-    image: myminicloud/web2:demo
+    image: "${DOCKERHUB_USER:-bekanesiucapcute}/myminicloud-web2:demo"
     container_name: web-frontend-server2
     ports: ["127.0.0.1:8082:80"]
     networks:
@@ -39,12 +39,12 @@ services:
 
   application-backend-server:
     build: ./application-backend-server
-    image: myminicloud/app:demo
+    image: "${DOCKERHUB_USER:-bekanesiucapcute}/myminicloud-app:demo"
     container_name: application-backend-server
     ports: ["127.0.0.1:8085:8081"]
     environment:
       KEYCLOAK_INTERNAL_URL: http://authentication-identity-server:8080/auth
-      ALLOWED_REALMS: "realm_${DEMO_STUDENT_ID:-demo0000},master"
+      ALLOWED_REALMS: "realm_${DEMO_STUDENT_ID:-524h0167},master"
       OIDC_PUBLIC_BASE_URL: "${OIDC_PUBLIC_BASE_URL:-}"
       DB_HOST: relational-database-server
       DB_PORT: "3306"
@@ -101,7 +101,7 @@ services:
       KC_HTTP_RELATIVE_PATH: /auth
       KC_PROXY_HEADERS: xforwarded
       KC_HEALTH_ENABLED: "true"
-      DEMO_STUDENT_ID: "${DEMO_STUDENT_ID:-demo0000}"
+      DEMO_STUDENT_ID: "${DEMO_STUDENT_ID:-524h0167}"
       DEMO_SV01_PASSWORD: "${DEMO_SV01_PASSWORD:?Run python setup_demo.py}"
       DEMO_SV02_PASSWORD: "${DEMO_SV02_PASSWORD:?Run python setup_demo.py}"
       KC_HTTP_MANAGEMENT_RELATIVE_PATH: /
