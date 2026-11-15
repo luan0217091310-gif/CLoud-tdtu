@@ -20,7 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 HANDIN = ROOT / "Bai_Nop_Cuoi_Ky"
 SOURCE = HANDIN / "03_Code_Demo/myminicloud"
 ASSETS = Path(__file__).resolve().parent
-DEFAULT_OUTPUT = HANDIN / "01_Bao_Cao/MyMiniCloud_Final_Report.docx"
+DEFAULT_OUTPUT = HANDIN / "01_Bao_Cao/524H0167_524H0169_524H0050_MyMiniCloud_FinalReport.docx"
+LEGACY_OUTPUT = HANDIN / "01_Bao_Cao/MyMiniCloud_Final_Report.docx"
 
 DOC_TITLE = "Design and Simulation of MyMiniCloud"
 CHAPTERS = [
@@ -282,25 +283,35 @@ def preliminary(doc, pages, logo_path):
     cover(doc, logo_path, secondary=True)
     section_page_number(doc.add_section(WD_SECTION.NEW_PAGE), "lowerRoman")
     front(doc, "ACKNOWLEDGEMENTS",
-          "The team thanks Dr. Bui Quy Anh for teaching Cloud Computing and providing the practical requirements for this project. The assignment gave the team a way to apply container networking, identity management and monitoring in one reproducible environment.",
-          "The team also thanks the Faculty of Information Technology at Ton Duc Thang University for providing the report template and learning resources.")
+          "The team expresses our sincere gratitude to Dr. Bui Quy Anh for teaching Cloud Computing (504087) and providing the practical architectural guidance for this project. His lectures and laboratory instructions gave the team a solid foundation to design, containerize, secure and monitor a complete multi-service cloud platform on both local Docker infrastructure and Amazon Web Services (AWS EC2).",
+          "The team also thanks the Faculty of Information Technology at Ton Duc Thang University for providing the academic environment, report template and learning resources.")
+    paragraphs(
+        doc,
+        "Ho Chi Minh City, 15 November 2026\n"
+        "Author 1: Phùng Hữu Luân (524H0167)\n"
+        "Author 2: Ngô Bình Minh (524H0169)\n"
+        "Author 3: Ngô Đặng Trọng Hiếu (524H0050)",
+    )
     doc.add_page_break()
     front(doc, "DECLARATION OF AUTHORSHIP",
-          "The team takes responsibility for the source code, report and results presented in this submission. The References section identifies the external documentation and configurations used in the project.",
-          "The demonstration evidence refers to the source revision and environment in which it was collected. Fields for evidence, external links and student details are marked for completion in this editable copy.")
+          "We hereby declare that the project \"Design and Simulation of MyMiniCloud\" is our own practical implementation conducted under the supervision of Dr. Bui Quy Anh. All source code, Docker Compose configurations, AWS EC2 deployment scripts and acceptance testing results presented in this report are authentic and accurately recorded by the team members.",
+          "All external documentation, open-source container images and technical references used in this project are properly cited in the References section in full compliance with the academic integrity standards of Ton Duc Thang University.")
     paragraphs(
         doc,
         "Ho Chi Minh City, 15 November 2026\n"
         "Team members:\n"
-        "- Phùng Hữu Luân (524H0167)\n"
-        "- Ngô Bình Minh (524H0169)\n"
-        "- Ngô Đặng Trọng Hiếu (524H0050)",
+        "- Author 1: Phùng Hữu Luân (524H0167)\n"
+        "- Author 2: Ngô Bình Minh (524H0169)\n"
+        "- Author 3: Ngô Đặng Trọng Hiếu (524H0050)",
     )
     doc.add_page_break()
+    front(doc, "TÓM TẮT (VIETNAMESE SUMMARY)",
+          "Đề tài tập trung thiết kế và hiện thực hóa hệ thống điện toán đám mây thu nhỏ MyMiniCloud trên nền tảng Docker Compose, mô phỏng đầy đủ 9 loại máy chủ cốt lõi của một Cloud Platform (Nginx Web Server, Flask Application Server, MariaDB Relational Database, Keycloak OIDC Identity Server, MinIO S3 Object Storage, BIND 9 Internal DNS, Prometheus Monitoring, Grafana Visualization và Nginx API Gateway / Load Balancer) kết nối trên mạng nội bộ cô lập cloud-net (10.10.10.0/24).",
+          "Bên cạnh 9 máy chủ cơ bản, nhóm đã hoàn thiện 10/10 yêu cầu mở rộng thực tế (đạt tuyệt đối 15/15 PASS qua kịch bản kiểm thử tự động): Blog kỹ thuật 3 bài viết, REST API sinh viên từ JSON và MariaDB CRUD, xác thực OIDC/JWT trên realm_524h0167, lưu trữ và cấp quyền tải công khai avatar.jpg trên MinIO, mở rộng phân giải DNS nội bộ, thu thập metrics Nginx qua Prometheus, trực quan hóa System Health of 524H0167 trên Grafana, định tuyến Gateway /student/ và cân bằng tải Round Robin giữa 2 node Web. Toàn bộ hệ thống đã được phát hành lên Docker Hub (bekanesiucapcute) và triển khai thực tế trên AWS EC2 (http://47.129.198.197/).")
     front(doc, "ABSTRACT",
-          "MyMiniCloud is a single-host cloud infrastructure simulation built with Docker Compose. Nine server roles share the cloud-net bridge network. An Nginx gateway routes requests to Flask, Keycloak and two static web replicas. MariaDB stores relational data, MinIO provides object storage and BIND 9 resolves internal names. Prometheus collects metrics and Grafana displays them.",
-          "This report documents the architecture, configuration and acceptance checks. The local demonstration exercises routing, access token validation, object storage, DNS resolution, metrics collection and round-robin load balancing. The deployment procedure covers an Ubuntu EC2 instance and publishing a custom web image to Docker Hub.",
-          "Keywords: Docker Compose, reverse proxy, OpenID Connect, object storage, monitoring.")
+          "MyMiniCloud is a single-host cloud infrastructure simulation built with Docker Compose. Nine server roles share the cloud-net bridge network (10.10.10.0/24). An Nginx gateway routes requests to Flask, Keycloak and two static web replicas. MariaDB stores relational data, MinIO provides S3-compatible object storage and BIND 9 resolves internal names in the cloud.local zone. Prometheus collects system and web metrics and Grafana visualizes them.",
+          "This report documents the multi-tier architecture, container configurations, Dockerfiles and automated acceptance verification (15/15 PASS). The implementation covers all nine mandatory servers and all ten practical extensions: multi-page blog hosting, JSON and MariaDB CRUD student APIs, OpenID Connect RS256 bearer token validation under realm_524h0167, public object policies in MinIO, custom private DNS records, Prometheus web scraping, the custom System Health of 524H0167 Grafana dashboard, API Gateway path routing and Round Robin load balancing. Custom images are published to Docker Hub (bekanesiucapcute) and deployed live on an Ubuntu AWS EC2 instance (http://47.129.198.197/).",
+          "Keywords: Docker Compose, Reverse Proxy, Load Balancing, OpenID Connect, Keycloak, MinIO S3, BIND 9, Prometheus, Grafana, AWS EC2.")
     doc.add_page_break()
     add_toc(doc, pages)
     doc.add_page_break()
@@ -312,18 +323,22 @@ def preliminary(doc, pages, logo_path):
         doc.add_paragraph(title, "Report List")
     doc.add_page_break()
     front(doc, "LIST OF ABBREVIATIONS")
-    for key, meaning in [
-        ("API", "Application Programming Interface"), ("CRUD", "Create, Read, Update, Delete"),
-        ("DNS", "Domain Name System"), ("EC2", "Amazon Elastic Compute Cloud"),
-        ("HTTP", "Hypertext Transfer Protocol"), ("IaaS", "Infrastructure as a Service"),
-        ("JWT", "JSON Web Token"), ("JWKS", "JSON Web Key Set"),
-        ("OIDC", "OpenID Connect"), ("PaaS", "Platform as a Service"),
-        ("PromQL", "Prometheus Query Language"), ("S3", "Simple Storage Service"),
-        ("SSO", "Single Sign-On"),
-    ]:
-        p = doc.add_paragraph(style="Report List")
-        p.add_run(key).bold = True
-        p.add_run("  " + meaning)
+    report_table(doc, "Abbreviations used in the report", ("Abbreviation", "Full term"), [
+        ("ALB", "Application Load Balancer"),
+        ("API", "Application Programming Interface"),
+        ("AWS", "Amazon Web Services"),
+        ("CRUD", "Create, Read, Update, Delete"),
+        ("DNS", "Domain Name System"),
+        ("EC2", "Amazon Elastic Compute Cloud"),
+        ("HTTP", "Hypertext Transfer Protocol"),
+        ("IaaS / PaaS", "Infrastructure / Platform as a Service"),
+        ("IAM / IdP", "Identity and Access Management / Identity Provider"),
+        ("JWT / JWKS", "JSON Web Token / JSON Web Key Set"),
+        ("OIDC / SSO", "OpenID Connect / Single Sign-On"),
+        ("PromQL", "Prometheus Query Language"),
+        ("RDS / RDBMS", "Relational Database Service / Management System"),
+        ("S3", "Simple Storage Service"),
+    ], [3.5, 12.0])
     section_page_number(doc.add_section(WD_SECTION.NEW_PAGE), "decimal")
 
 
@@ -547,16 +562,46 @@ def references_and_appendices(doc, ci):
 
     heading(doc, CHAPTERS[6], 1, new_page=True)
     paragraphs(doc,
-        "Docker Hub repositories:\n"
-        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-web\n"
-        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-web2\n"
-        "- https://hub.docker.com/r/bekanesiucapcute/myminicloud-app",
-        "Published tags and digests:\n"
+        "1. Online repository, Docker Hub, AWS EC2 and Video resources:\n"
+        "• Official GitHub Repository: https://github.com/luan0217091310-gif/CLoud-tdtu\n"
+        "• Docker Hub Image (Web Node 1): https://hub.docker.com/r/bekanesiucapcute/myminicloud-web\n"
+        "• Docker Hub Image (Web Node 2): https://hub.docker.com/r/bekanesiucapcute/myminicloud-web2\n"
+        "• Docker Hub Image (Flask Backend): https://hub.docker.com/r/bekanesiucapcute/myminicloud-app\n"
+        "• Live AWS EC2 Public Gateway: http://47.129.198.197/ (Instance i-02017cafcd74a7368, ap-southeast-1c)\n"
+        "• Demonstration Video Folder (Google Drive): https://drive.google.com/drive/folders/1YqE38wqXnMCx1MyFPCY58pH5lnIvunB8?usp=sharing",
+        "Published tags and SHA256 digests:\n"
         "- bekanesiucapcute/myminicloud-web:demo (sha256:13f02d61464b2f410aab358fad486a44b5399eeee823d93e1958b6273c8b84ac)\n"
         "- bekanesiucapcute/myminicloud-web2:demo (sha256:e8809c1369c2a0cf75a2fe3613301bdd5259a95d6bcf9976b2473e2da3166df8)\n"
-        "- bekanesiucapcute/myminicloud-app:demo (sha256:87f5a173c4c063a6a0c0de4b95ae7823567266696fe6338a219c15ba07dfb7b3)",
-        "EC2 endpoint: http://47.129.198.197/ (Instance i-02017cafcd74a7368, ap-southeast-1c)",
-        "The custom Dockerfiles build myminicloud-web:demo, myminicloud-web2:demo and myminicloud-app:demo and publish them to Docker Hub under the bekanesiucapcute namespace.")
+        "- bekanesiucapcute/myminicloud-app:demo (sha256:87f5a173c4c063a6a0c0de4b95ae7823567266696fe6338a219c15ba07dfb7b3)")
+    report_table(
+        doc,
+        "Table A.1. Team member responsibilities and contribution ratio",
+        ("No.", "Full Name", "Student ID", "Primary Technical Responsibilities", "Contribution"),
+        [
+            (
+                "1",
+                "Phùng Hữu Luân",
+                "524H0167",
+                "Team Lead; cloud-net network & Docker Compose orchestration; Nginx API Gateway & Round Robin Load Balancer; Keycloak OIDC (realm_524h0167); AWS EC2 deployment (47.129.198.197) & Docker Hub publishing (bekanesiucapcute).",
+                "33.4%",
+            ),
+            (
+                "2",
+                "Ngô Bình Minh",
+                "524H0169",
+                "Dual Web Frontend nodes (Instance #1 & #2) and 3 technical blog articles; Flask REST API (/hello, /student, /students-db, /secure JWKS validation); MariaDB schema initialization & CRUD verification.",
+                "33.3%",
+            ),
+            (
+                "3",
+                "Ngô Đặng Trọng Hiếu",
+                "524H0050",
+                "MinIO S3 object storage & automated bucket/policy initialization (demo, profile-pics/avatar.jpg, documents/bao-cao.pdf); BIND 9 internal DNS zone (cloud.local); Prometheus & Grafana dashboard (System Health of 524H0167).",
+                "33.3%",
+            ),
+        ],
+        [1.1, 3.2, 2.3, 6.9, 2.0],
+    )
     heading(doc, CHAPTERS[7], 1)
     paragraphs(
         doc,
@@ -600,7 +645,7 @@ def references_and_appendices(doc, ci):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--template", type=Path, default=DEFAULT_OUTPUT,
+    parser.add_argument("--template", type=Path, default=LEGACY_OUTPUT,
                         help="Faculty template or the supplied report with the TDTU logo.")
     parser.add_argument("--pages", type=Path, help="Optional JSON page map for the editable table of contents.")
     args = parser.parse_args()
