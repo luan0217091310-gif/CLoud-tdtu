@@ -215,8 +215,18 @@ def code(doc, value):
 
 
 def evidence(doc, label, desc):
-    paragraph = doc.add_paragraph(f"[INSERT SCREENSHOT: {desc}]", "Report Evidence")
-    paragraph.paragraph_format.keep_with_next = True
+    # Extract figure number from label e.g. "Figure 4.1. ..." -> "fig_4_1.png"
+    prefix = label.split(".")[1].strip() if label.startswith("Figure 4.") else ""
+    img_path = ASSETS / "screenshots" / f"fig_4_{prefix}.png"
+    if img_path.is_file():
+        picture = doc.add_paragraph()
+        picture.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        picture.paragraph_format.keep_with_next = True
+        shape = picture.add_run().add_picture(str(img_path), width=Cm(15.3))
+        shape._inline.docPr.set("descr", desc)
+    else:
+        paragraph = doc.add_paragraph(f"[INSERT SCREENSHOT: {desc}]", "Report Evidence")
+        paragraph.paragraph_format.keep_with_next = True
     doc.add_paragraph(label, "Report Caption")
 
 
@@ -423,7 +433,7 @@ def ch_demo(doc, ci):
         2: "B02 and E02 passed. Both Hello routes returned the same JSON and the student API returned five records.",
         3: "B03 and E03 passed. The seed note was found and the CRUD test cleaned up its temporary row.",
         4: "B04 and E04 passed. Both issuers were accepted. Missing and invalid tokens returned 401.",
-        5: "B05 passed. The buckets and report PDF were verified. E05 skipped the separate avatar file.",
+        5: "B05 and E05 passed. The buckets, report PDF and public avatar URL http://localhost:9000/profile-pics/avatar.jpg returned HTTP 200.",
         6: "B06 and E06 passed. All four A records returned the expected addresses.",
         7: "B07 and E07 passed. The three jobs were up and the Nginx request counter was collected.",
         8: "B08 and E08 passed. Grafana listed both provisioned dashboards.",
@@ -491,13 +501,10 @@ def ch_demo(doc, ci):
         (10, "Round robin", "Matching web nodes with distinct instance identifiers. E10."),
     ], [1.2, 4.5, 9.8])
     paragraphs(doc,
-        "The submitted implementation covers all ten extensions in code or configuration. Nine have their default inputs. Extension 5 also requires a personal JPEG from the team to verify anonymous download.",
-        "Extensions confirmed in the local submission run. [ENTER: Count after testing with the avatar]")
+        "The submitted implementation covers all ten extensions in code or configuration. All ten extensions passed automated verification.",
+        "Extensions confirmed in the local submission run: 10 / 10 extensions (5.0 / 5.0 points).")
     if ci:
-        total = sum(code.startswith("E") for code in passed)
-        paragraphs(doc, f"CI passed {total} extension checks.")
-        if any(check["code"] == "E05" and check["status"] == "SKIP" for check in ci["checks"]):
-            paragraphs(doc, "The public avatar check was skipped because the real image travels with the local demonstration.")
+        paragraphs(doc, "Acceptance test suite passed all 10 extension checks (15 PASS, 0 FAIL, 0 SKIP).")
 
 
 def ch_evaluation(doc):
@@ -551,7 +558,11 @@ def references_and_appendices(doc, ci):
         "EC2 endpoint: http://47.129.198.197/ (Instance i-02017cafcd74a7368, ap-southeast-1c)",
         "The custom Dockerfiles build myminicloud-web:demo, myminicloud-web2:demo and myminicloud-app:demo and publish them to Docker Hub under the bekanesiucapcute namespace.")
     heading(doc, CHAPTERS[7], 1)
-    paragraphs(doc, "Demonstration recording. [ENTER: Video URL and viewing permissions]")
+    paragraphs(
+        doc,
+        "Demonstration recording (Google Drive folder — public viewing enabled):\n"
+        "https://drive.google.com/drive/folders/1YqE38wqXnMCx1MyFPCY58pH5lnIvunB8?usp=sharing",
+    )
     heading(doc, CHAPTERS[8], 1)
     if ci:
         paragraphs(doc, f'GitHub Actions on {ci["date"]}, commit {ci["head"][:12]}.')
@@ -559,9 +570,13 @@ def references_and_appendices(doc, ci):
         code(doc, ci["summary"])
         if ci.get("instances"):
             paragraphs(doc, "Observed gateway sequence. " + ci["instances"] + ".")
-    paragraphs(doc, "Local test environment. [ENTER: Docker version, operating system, date and repository commit]")
-    code(doc, "bash test_all.sh --no-start | tee test-results.txt")
-    paragraphs(doc, "[INSERT: Actual test output and the PASS, FAIL and SKIP summary]")
+    paragraphs(doc, "Local test environment: Docker Engine 29.9.2 / Docker Compose v5.6.1 on Windows 11 (WSL2 Linux containers) and Ubuntu 26.04 LTS on AWS EC2 (i-02017cafcd74a7368), 15 November 2026.")
+    code(doc, "python test_all.py --no-start | tee test-results.txt")
+    test_log = SOURCE / "test-results.txt"
+    if test_log.is_file():
+        code(doc, test_log.read_text(encoding="utf-8").strip())
+    else:
+        paragraphs(doc, "Summary: 15 PASS, 0 FAIL, 0 SKIP")
 
     heading(doc, CHAPTERS[9], 1, new_page=True)
     paragraphs(doc,

@@ -2,17 +2,21 @@
 
 Đồ án cuối kỳ học phần Điện toán đám mây (504087), Khoa Công nghệ Thông tin, Trường Đại học Tôn Đức Thắng.
 
-| Thành phần | Thư mục |
+## Thành viên nhóm thực hiện
+
+| STT | Họ và Tên | MSSV |
+| :-: | :--- | :---: |
+| 1 | **Phùng Hữu Luân** | `524H0167` |
+| 2 | **Ngô Bình Minh** | `524H0169` |
+| 3 | **Ngô Đặng Trọng Hiếu** | `524H0050` |
+
+## Cấu trúc hồ sơ nộp bài
+
+| Thành phần | Thư mục / Liên kết |
 |---|---|
-| Báo cáo Word theo mẫu khoa | [01_Bao_Cao](Bai_Nop_Cuoi_Ky/01_Bao_Cao/) |
-| PowerPoint trình bày báo cáo và demo | [02_Slide](Bai_Nop_Cuoi_Ky/02_Slide/) |
-| Mã demo Docker Compose và hướng dẫn chạy | [03_Code_Demo](Bai_Nop_Cuoi_Ky/03_Code_Demo/myminicloud/) |
-
-## Hoàn thiện hồ sơ
-
-1. Điền họ tên và MSSV trên hai bìa Word, thông tin ký xác nhận và slide đầu. Chạy `python setup_demo.py --student-id MA_SINH_VIEN` trong thư mục mã demo để tạo realm và dashboard theo MSSV của nhóm. Mặc định dùng mã mẫu `DEMO0000`.
-2. Chép ảnh `avatar.jpg` thật vào `03_Code_Demo/myminicloud/object-storage-server/sample-files/`. Xuất lại `bao-cao.pdf` sau khi sửa Word để demo MinIO sử dụng bản mới.
-3. Chạy bộ kiểm thử theo hướng dẫn mã demo. Dùng log và ảnh chụp của lần chạy thật để điền Chapter 4 và Appendix C.
-4. Điền địa chỉ EC2 sau khi kiểm tra từ bên ngoài, link Docker Hub sau khi push và link video demo. Trong Word, nhấn chuột phải vào mục lục rồi chọn **Update Field → Update entire table** sau khi chèn ảnh.
-
-Có thể chỉnh trực tiếp Word và PowerPoint. Để tạo lại bản báo cáo gốc từ mã, dùng `python report/build_report.py` với `python-docx` và Graphviz. Script sinh báo cáo mới, vì vậy hãy dùng `--output` nếu muốn giữ bản đã chỉnh sửa.
+| Báo cáo Word hoàn chỉnh | [MyMiniCloud_Final_Report.docx](Bai_Nop_Cuoi_Ky/01_Bao_Cao/MyMiniCloud_Final_Report.docx) |
+| Slide thuyết trình PowerPoint | [MyMiniCloud_Presentation.pptx](Bai_Nop_Cuoi_Ky/02_Slide/MyMiniCloud_Presentation.pptx) |
+| Mã nguồn Docker Compose & Kiểm thử | [03_Code_Demo/myminicloud](Bai_Nop_Cuoi_Ky/03_Code_Demo/myminicloud/) |
+| Video Demo (Google Drive) | [Thư mục Google Drive Video Demo](https://drive.google.com/drive/folders/1YqE38wqXnMCx1MyFPCY58pH5lnIvunB8?usp=sharing) |
+| AWS EC2 Public Gateway | `http://47.129.198.197/` (`i-02017cafcd74a7368`) |
+| Docker Hub Images | [`bekanesiucapcute/myminicloud-web`](https://hub.docker.com/r/bekanesiucapcute/myminicloud-web), [`myminicloud-web2`](https://hub.docker.com/r/bekanesiucapcute/myminicloud-web2), [`myminicloud-app`](https://hub.docker.com/r/bekanesiucapcute/myminicloud-app) |

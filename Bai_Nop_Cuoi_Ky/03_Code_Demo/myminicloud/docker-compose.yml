@@ -189,6 +189,8 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
       GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:?Run python setup_demo.py}"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
     volumes:
       - ./monitoring-grafana-dashboard-server/provisioning:/etc/grafana/provisioning:ro
       - ./.demo/dashboards:/etc/grafana/lab-dashboards:ro
