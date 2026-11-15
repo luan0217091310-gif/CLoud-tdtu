@@ -1,0 +1,37 @@
+name: MyMiniCloud acceptance
+on:
+  push:
+    branches: [hoan-thien-nop-bai]
+    paths:
+      - "Bai_Nop_Cuoi_Ky/03_Code_Demo/**"
+      - ".github/workflows/verify-mycloud.yml"
+  create:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compose:
+    if: github.ref == 'refs/heads/hoan-thien-nop-bai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: Bai_Nop_Cuoi_Ky/03_Code_Demo/myminicloud
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Resolve Compose configuration
+        run: |
+          python setup_demo.py
+          docker compose config --quiet
+      - name: Run runtime acceptance checks
+        run: bash test_all.sh --core
+      - name: Print Compose logs on failure
+        if: failure()
+        run: |
+          docker compose ps -a
+          docker compose logs --tail 75
+      - name: Stop the CI stack
+        if: always()
+        run: docker compose down
