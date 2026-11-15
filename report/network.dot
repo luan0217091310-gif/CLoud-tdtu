@@ -1,0 +1,40 @@
+digraph cloud {
+  graph [rankdir=TB, fontname="Liberation Sans", bgcolor="white", nodesep=.30, ranksep=.46, pad=.13, splines=polyline];
+  node [shape=box, style=filled, fillcolor="#eef4f7", color="#587682", fontname="Liberation Sans", fontsize=12, margin=".17,.10"];
+  edge [fontname="Liberation Sans", fontsize=10, color="#516774", arrowsize=.65];
+  browser [label="Browser / CLI", fillcolor="#f6f0e5"];
+  subgraph cluster_net {
+    label="Docker bridge cloud-net · 10.10.10.0/24";
+    labelloc=t;
+    fontname="Liberation Sans Bold";
+    fontsize=13;
+    color="#94a9af";
+    margin=15;
+    proxy [label="Nginx Gateway  ·  .80\nHTTP :80", fillcolor="#dceced"];
+    web [label="Nginx Web  ·  .10 / .11\nTwo static nodes :80"];
+    app [label="Flask API  ·  .20\nHTTP :8081"];
+    auth [label="Keycloak  ·  .40\nHTTP :8080/auth"];
+    db [label="MariaDB  ·  .50\nSQL :3306"];
+    s3 [label="MinIO  ·  .30\nS3 :9000 / UI :9001"];
+    dns [label="BIND 9  ·  .53\nDNS :53"];
+    prom [label="Prometheus  ·  .60\nHTTP :9090"];
+    graf [label="Grafana  ·  .70\nHTTP :3000"];
+    exporters [label="Node Exporter :9100\nNginx Exporter :9113"];
+    {rank=same; web; app; auth;}
+    {rank=same; s3; db; dns;}
+    {rank=same; exporters; prom; graf;}
+    proxy -> web [label="/ · Round Robin"];
+    proxy -> app [label="/api/ · /student/"];
+    proxy -> auth [label="/auth/"];
+    app -> db [label="TCP 3306"];
+    app -> auth [label="JWKS", constraint=false];
+    web -> s3 [style=invis];
+    auth -> dns [style=invis];
+    s3 -> exporters [style=invis];
+    db -> prom [style=invis];
+    dns -> graf [style=invis];
+    graf -> prom [label="PromQL", constraint=false];
+    prom -> exporters [label="scrape", constraint=false];
+  }
+  browser -> proxy [label="TCP 80"];
+}
