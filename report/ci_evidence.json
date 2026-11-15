@@ -1,0 +1,69 @@
+{
+  "run_url": "https://github.com/luan0217091310-gif/CLoud-tdtu/actions/runs/43701088821",
+  "head": "7891e9c1e50f47c2d8f4d6092fe0171a7fef719c",
+  "date": "15 November 2026",
+  "summary": "Summary: 14 PASS, 0 FAIL, 1 SKIP",
+  "checks": [
+    {
+      "status": "PASS",
+      "code": "B01"
+    },
+    {
+      "status": "PASS",
+      "code": "B02"
+    },
+    {
+      "status": "PASS",
+      "code": "B03"
+    },
+    {
+      "status": "PASS",
+      "code": "B04/B09"
+    },
+    {
+      "status": "PASS",
+      "code": "B05"
+    },
+    {
+      "status": "PASS",
+      "code": "B06/E06"
+    },
+    {
+      "status": "PASS",
+      "code": "B07/E07"
+    },
+    {
+      "status": "PASS",
+      "code": "B08/E08"
+    },
+    {
+      "status": "PASS",
+      "code": "B10"
+    },
+    {
+      "status": "PASS",
+      "code": "E01"
+    },
+    {
+      "status": "PASS",
+      "code": "E02/E09"
+    },
+    {
+      "status": "PASS",
+      "code": "E03"
+    },
+    {
+      "status": "PASS",
+      "code": "E04"
+    },
+    {
+      "status": "SKIP",
+      "code": "E05"
+    },
+    {
+      "status": "PASS",
+      "code": "E10"
+    }
+  ],
+  "instances": "Instance #2 → Instance #1 → Instance #2 → Instance #1"
+}

@@ -408,7 +408,27 @@ def ch_config(doc):
         "The web job checks an HTTP health gauge. Nginx Exporter reads measurable counters from stub_status. Grafana provisions a Prometheus data source with UID prometheus-uid, a custom System Health dashboard and the community Node Exporter Full dashboard (ID 1860) [9], [10].")
 
 
-def ch_demo(doc):
+def ch_demo(doc, ci):
+    results = {
+        1: "B01 and E01 passed. Home, Blog and all three articles loaded.",
+        2: "B02 and E02 passed. Both Hello routes returned the same JSON and the student API returned five records.",
+        3: "B03 and E03 passed. The seed note was found and the CRUD test cleaned up its temporary row.",
+        4: "B04 and E04 passed. Both issuers were accepted. Missing and invalid tokens returned 401.",
+        5: "B05 passed. The buckets and report PDF were verified. E05 skipped the separate avatar file.",
+        6: "B06 and E06 passed. All four A records returned the expected addresses.",
+        7: "B07 and E07 passed. The three jobs were up and the Nginx request counter was collected.",
+        8: "B08 and E08 passed. Grafana listed both provisioned dashboards.",
+        9: "B09, E09 and E10 passed. The gateway served the student list and alternated web nodes.",
+    }
+    passed = {
+        code for check in ci.get("checks", []) if check["status"] == "PASS"
+        for code in check["code"].split("/")
+    }
+    needed = [
+        {"B01", "E01"}, {"B02", "E02"}, {"B03", "E03"}, {"B04", "E04"},
+        {"B05"}, {"B06", "E06"}, {"B07", "E07"}, {"B08", "E08"}, {"B09", "E09", "E10"},
+    ]
+
     heading(doc, CHAPTERS[3], 1, new_page=True)
     heading(doc, "4.1. Environment and test procedure")
     paragraphs(doc,
@@ -418,12 +438,16 @@ def ch_demo(doc):
     paragraphs(doc,
         "The setup script generates local credentials in .env and creates the realm and dashboard from the student ID. The default ID for a generic demonstration is DEMO0000.",
         "If another database uses host port 3306, set DB_HOST_PORT=13306 before startup. MariaDB keeps port 3306 inside the network. Run docker compose down to stop the stack and retain volumes.",
-        "The test suite reports PASS, FAIL or SKIP for each check and returns a nonzero exit code for failures. The following sections state the expected results and provide fields for observations and screenshots from the submission run.")
+        "The test suite reports PASS, FAIL or SKIP and returns a nonzero exit code for failures. The CI results below come from the GitHub Actions run in Appendix C. The screenshot fields are for the team's submission run.")
     for i, (name, command, expected, photo) in enumerate(DEMO, 1):
         heading(doc, f"4.{i + 1}. {name}", new_page=i in {1, 4, 7})
         code(doc, command)
         paragraphs(doc, f"Expected result. {expected}")
-        result = doc.add_paragraph("Observed result. [ENTER: Check ID and recorded outcome]")
+        if needed[i - 1] <= passed:
+            outcome = "CI observation. " + results[i]
+        else:
+            outcome = "Observed result. [ENTER: Check ID and recorded outcome]"
+        result = doc.add_paragraph(outcome)
         result.paragraph_format.keep_with_next = True
         evidence(doc, FIGURES[i], photo)
 
@@ -431,7 +455,8 @@ def ch_demo(doc):
     paragraphs(doc,
         "From the Flask container, the script pings the web, app-server, db, keycloak, minio, prometheus, grafana, dns-server and gateway aliases. The acceptance criterion is a reply with zero packet loss for each name.")
     code(doc, "docker compose exec application-backend-server ping -c 2 db")
-    paragraphs(doc, "Observed result. [ENTER: B10 line from the test log]")
+    observed = "CI observation. B10 passed for all nine aliases without packet loss."
+    paragraphs(doc, observed if "B10" in passed else "Observed result. [ENTER: B10 line from the test log]")
 
     heading(doc, "4.12. Amazon EC2 and Docker Hub")
     paragraphs(doc,
@@ -458,7 +483,12 @@ def ch_demo(doc):
     ], [1.2, 4.5, 9.8])
     paragraphs(doc,
         "The submitted implementation covers all ten extensions in code or configuration. Nine have their default inputs. Extension 5 also requires a personal JPEG from the team to verify anonymous download.",
-        "Extensions confirmed in the submission run. [ENTER: Count based on observed results]")
+        "Extensions confirmed in the local submission run. [ENTER: Count after testing with the avatar]")
+    if ci:
+        total = sum(code.startswith("E") for code in passed)
+        paragraphs(doc, f"CI passed {total} extension checks.")
+        if any(check["code"] == "E05" and check["status"] == "SKIP" for check in ci["checks"]):
+            paragraphs(doc, "The public avatar check was skipped because the real image travels with the local demonstration.")
 
 
 def ch_evaluation(doc):
@@ -479,7 +509,7 @@ def ch_evaluation(doc):
         "Future work includes scoped database accounts, HTTPS and a secret store. A multi-host stack needs replication and backups. Load tests could measure gateway latency and throughput.")
 
 
-def references_and_appendices(doc):
+def references_and_appendices(doc, ci):
     heading(doc, CHAPTERS[5], 1, new_page=True)
     sources = [
         ("Faculty of Information Technology, Ton Duc Thang University", "MyMiniCloud project brief and extension requirements. Cloud Computing (504087).", ""),
@@ -508,7 +538,13 @@ def references_and_appendices(doc):
     heading(doc, CHAPTERS[7], 1)
     paragraphs(doc, "Demonstration recording. [ENTER: Video URL and viewing permissions]")
     heading(doc, CHAPTERS[8], 1)
-    paragraphs(doc, "Test environment. [ENTER: Docker version, operating system, date and repository commit]")
+    if ci:
+        paragraphs(doc, f'GitHub Actions on {ci["date"]}, commit {ci["head"][:12]}.')
+        doc.add_paragraph(ci["run_url"], "Report List")
+        code(doc, ci["summary"])
+        if ci.get("instances"):
+            paragraphs(doc, "Observed gateway sequence. " + ci["instances"] + ".")
+    paragraphs(doc, "Local test environment. [ENTER: Docker version, operating system, date and repository commit]")
     code(doc, "bash test_all.sh --no-start | tee test-results.txt")
     paragraphs(doc, "[INSERT: Actual test output and the PASS, FAIL and SKIP summary]")
 
@@ -539,6 +575,8 @@ def main():
     parser.add_argument("--pages", type=Path, help="Optional JSON page map for the editable table of contents.")
     args = parser.parse_args()
     pages = json.loads(args.pages.read_text(encoding="utf-8")) if args.pages else {}
+    evidence = ASSETS / "ci_evidence.json"
+    ci = json.loads(evidence.read_text(encoding="utf-8")) if evidence.exists() else {}
     doc = Document()
     doc.core_properties.title = DOC_TITLE
     doc.core_properties.subject = "Cloud Computing Final Report (504087)"
@@ -554,9 +592,9 @@ def main():
         subprocess.run(["dot", "-Gdpi=180", "-Tpng", str(ASSETS / "network.dot"), "-o", str(png)], check=True)
         ch_arch(doc, png)
     ch_config(doc)
-    ch_demo(doc)
+    ch_demo(doc, ci)
     ch_evaluation(doc)
-    references_and_appendices(doc)
+    references_and_appendices(doc, ci)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     doc.save(args.output)
 
