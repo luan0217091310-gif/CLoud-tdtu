@@ -24,6 +24,13 @@ jobs:
       - name: Resolve Compose configuration
         run: |
           python setup_demo.py
+          # Exercise a dash-leading MinIO password and mask every temporary secret.
+          sed -i 's/^MINIO_ROOT_PASSWORD=/MINIO_ROOT_PASSWORD=-/' .env
+          while IFS='=' read -r key value; do
+            case "$key" in
+              *_PASSWORD) printf '::add-mask::%s\n' "$value" ;;
+            esac
+          done < .env
           docker compose config --quiet
       - name: Run runtime acceptance checks
         run: bash test_all.sh --core

@@ -64,7 +64,7 @@ def prepare(student_id=None):
     values["DEMO_STUDENT_ID"] = suffix
     for key in PASSWORD_KEYS:
         if not values.get(key):
-            values[key] = secrets.token_urlsafe(18)
+            values[key] = secrets.token_hex(18)
     if values != existing:
         write_env(values)
 

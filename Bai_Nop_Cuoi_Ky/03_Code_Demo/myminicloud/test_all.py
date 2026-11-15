@@ -322,11 +322,13 @@ def main():
         ("E05", "Public avatar", check_avatar),
         ("E10", "Round Robin", check_balancer),
     ]
+
+    samples = ROOT / "object-storage-server/sample-files"
+    missing = [name for name in ("avatar.jpg", "bao-cao.pdf") if not (samples / name).is_file()]
     passed = failed = skipped = 0
     for code, name, callback in checks:
-        samples = ROOT / "object-storage-server/sample-files"
-        if code == "E05" and args.core and not all((samples / name).is_file() for name in ("avatar.jpg", "bao-cao.pdf")):
-            print(f"SKIP [{code}] {name} | supply avatar.jpg and bao-cao.pdf for the full check.", flush=True)
+        if code == "E05" and args.core and missing:
+            print(f"SKIP [{code}] {name} | missing {', '.join(missing)}.", flush=True)
             skipped += 1
             continue
         try:

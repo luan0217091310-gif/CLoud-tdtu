@@ -6,8 +6,9 @@ case "${1:-}" in
   *) printf 'Usage: init-storage.sh [--core]\n' >&2; exit 2 ;;
 esac
 
-mc alias set lab http://object-storage-server:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
+mc alias set -- lab http://object-storage-server:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
 mc mb --ignore-existing lab/demo lab/profile-pics lab/documents
+mc anonymous set-json /avatar-policy.json lab/profile-pics
 mc cp /web/index.html lab/demo/index.html
 mc stat lab/demo/index.html
 
@@ -21,7 +22,6 @@ else
 fi
 if [ -f /samples/avatar.jpg ]; then
   mc cp /samples/avatar.jpg lab/profile-pics/avatar.jpg
-  mc anonymous set-json /avatar-policy.json lab/profile-pics
   mc stat lab/profile-pics/avatar.jpg
   printf 'URL ảnh demo: http://localhost:9000/profile-pics/avatar.jpg\n'
 else
