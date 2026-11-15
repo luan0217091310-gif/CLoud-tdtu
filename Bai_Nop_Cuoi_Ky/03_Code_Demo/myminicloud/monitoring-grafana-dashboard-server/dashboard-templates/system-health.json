@@ -4,7 +4,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": null,
   "links": [],
   "panels": [
@@ -18,12 +18,21 @@
           "color": {
             "mode": "palette-classic"
           },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 18,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "showPoints": "always",
+            "spanNulls": true
+          },
           "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 7,
         "w": 24,
         "x": 0,
         "y": 0
@@ -31,6 +40,10 @@
       "id": 1,
       "options": {
         "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -46,7 +59,7 @@
             "uid": "prometheus-uid"
           },
           "expr": "100 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[1m])) * 100",
-          "legendFormat": "CPU đang dùng",
+          "legendFormat": "CPU đang dùng ({{instance}})",
           "refId": "A"
         }
       ],
@@ -63,19 +76,32 @@
           "color": {
             "mode": "palette-classic"
           },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 18,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "showPoints": "always",
+            "spanNulls": true
+          },
           "unit": "bytes"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 7
       },
       "id": 2,
       "options": {
         "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -117,19 +143,32 @@
           "color": {
             "mode": "palette-classic"
           },
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 18,
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "showPoints": "always",
+            "spanNulls": true
+          },
           "unit": "Bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 18
+        "y": 14
       },
       "id": 3,
       "options": {
         "legend": {
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
@@ -162,7 +201,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "15s",
+  "refresh": "5s",
   "schemaVersion": 39,
   "tags": [
     "minicloud",
@@ -172,7 +211,7 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "timezone": "browser",

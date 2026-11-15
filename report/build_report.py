@@ -58,9 +58,9 @@ DEMO = [
     ("Prometheus and exporters", "curl http://localhost:9090/api/v1/targets\ncurl http://localhost:8080/metrics",
      "The node, web and web-nginx-exporter jobs are up. Prometheus has CPU samples and an Nginx request counter.",
      "Prometheus Targets page and a metric query with real samples"),
-    ("Grafana dashboards", "curl -u admin http://localhost:3000/api/search",
-     "Grafana lists Node Exporter Full and System Health of <STUDENT-ID>. The latter displays CPU, memory and network traffic.",
-     "System Health dashboard showing CPU, memory and network data"),
+    ("Grafana dashboards", "curl -u admin http://localhost:3000/api/search\ncurl -u admin http://localhost:3000/api/datasources",
+     "Grafana provisions the default Prometheus data source (UID prometheus-uid pointing to http://monitoring-prometheus-server:9090) and loads both Node Exporter Full (ID 1860) and System Health of 524H0167 (UID system-health-524h0167). Selecting the Last 5 minutes window (from=now-5m&to=now) renders continuous time-series lines across all three panels: CPU Usage (%) via rate(node_cpu_seconds_total{mode=\"idle\"}[1m]) (0.8–1.6% active usage), Memory Usage comparing used (~2.0 GiB) against available (13.3 GiB) RAM, and Network Traffic plotting receive/transmit throughput (~861 B/s) on interface eth0.",
+     "System Health of 524H0167 dashboard showing live time-series lines for CPU Usage (%), Memory Usage, and Network Traffic"),
     ("Gateway and load balancing", "curl http://localhost/student/\nfor i in 1 2 3 4; do\n  curl -sI http://localhost/ | grep -i x-load-balancer-node\ndone",
      "The student route returns the same five records as /api/student. Four sequential web requests alternate between the two node headers.",
      "Terminal showing student JSON and alternating node headers"),
@@ -72,7 +72,9 @@ TABLES = [
     "Table 4.1. Coverage of the ten extensions",
 ]
 FIGURES = ["Figure 2.1. Services on the cloud-net network"] + [
-    f"Figure 4.{i}. {row[0].capitalize()} evidence" for i, row in enumerate(DEMO, 1)
+    "Figure 4.8. System Health of 524H0167 dashboard on Grafana (Last 5 minutes window) showing live CPU Usage (%), Memory Usage and Network Traffic time series"
+    if i == 8 else f"Figure 4.{i}. {row[0].capitalize()} evidence"
+    for i, row in enumerate(DEMO, 1)
 ] + ["Figure 4.10. EC2 instance and security group", "Figure 4.11. Custom image on Docker Hub"]
 
 
@@ -451,7 +453,7 @@ def ch_demo(doc, ci):
         5: "B05 and E05 passed. The buckets, report PDF and public avatar URL http://localhost:9000/profile-pics/avatar.jpg returned HTTP 200.",
         6: "B06 and E06 passed. All four A records returned the expected addresses.",
         7: "B07 and E07 passed. The three jobs were up and the Nginx request counter was collected.",
-        8: "B08 and E08 passed. Grafana listed both provisioned dashboards.",
+        8: "B08 and E08 passed. Grafana listed both provisioned dashboards and displayed live Node Exporter time-series curves across CPU Usage (%) (0.8–1.6%), Memory Usage (~2.0 GiB used, 13.3 GiB available) and Network Traffic (861 B/s on eth0) in System Health of 524H0167.",
         9: "B09, E09 and E10 passed. The gateway served the student list and alternated web nodes.",
     }
     passed = {
