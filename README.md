@@ -6,8 +6,8 @@
 >
 > 🎥 **Video Demo Nghiệm Thu (Google Drive):** [Thư mục Video Demo (Public)](https://drive.google.com/drive/folders/1YqE38wqXnMCx1MyFPCY58pH5lnIvunB8?usp=sharing)  
 > 🌐 **AWS EC2 Public Gateway (Live):** [http://47.129.198.197/](http://47.129.198.197/) (`ec2-47-129-198-197.ap-southeast-1.compute.amazonaws.com`)  
-> 📄 **Báo Cáo Cuối Kỳ (Word .docx):** [MyMiniCloud_Final_Report.docx](Bai_Nop_Cuoi_Ky/01_Bao_Cao/MyMiniCloud_Final_Report.docx)  
-> 📊 **Slide Thuyết Trình (PowerPoint .pptx):** [MyMiniCloud_Presentation.pptx](Bai_Nop_Cuoi_Ky/02_Slide/MyMiniCloud_Presentation.pptx)  
+> 📄 **Báo Cáo Cuối Kỳ (Word .docx & PDF):** [524H0167_524H0169_524H0050_MyMiniCloud_FinalReport.docx](Bai_Nop_Cuoi_Ky/01_Bao_Cao/524H0167_524H0169_524H0050_MyMiniCloud_FinalReport.docx) | [524H0167_524H0169_524H0050_MyMiniCloud_FinalReport.pdf](Bai_Nop_Cuoi_Ky/01_Bao_Cao/524H0167_524H0169_524H0050_MyMiniCloud_FinalReport.pdf)  
+> 📊 **Slide Thuyết Trình (PowerPoint .pptx):** [524H0167_524H0169_524H0050_MyMiniCloud_Presentation.pptx](Bai_Nop_Cuoi_Ky/02_Slide/524H0167_524H0169_524H0050_MyMiniCloud_Presentation.pptx)  
 > 💻 **Mã Nguồn & Kịch Bản Kiểm Thử:** [Bai_Nop_Cuoi_Ky/03_Code_Demo/myminicloud](Bai_Nop_Cuoi_Ky/03_Code_Demo/myminicloud/)
 
 Hệ thống **MyMiniCloud** được thiết kế và xây dựng nhằm mô phỏng một nền tảng Cloud Platform thu nhỏ hoàn chỉnh (tương đương AWS, GCP, Azure) gồm **9 loại máy chủ cốt lõi** và **10 tính năng mở rộng thực tế**, vận hành trong các Docker container độc lập, kết nối qua mạng nội bộ `cloud-net` (Subnet: `10.10.10.0/24`) và được triển khai, kiểm thử tự động (**15/15 PASS**) trên cả **máy Local** lẫn **AWS EC2 (Ubuntu LTS)**.

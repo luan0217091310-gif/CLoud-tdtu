@@ -450,10 +450,10 @@ def ch_demo(doc, ci):
         2: "B02 and E02 passed. Both Hello routes returned the same JSON and the student API returned five records.",
         3: "B03 and E03 passed. The seed note was found and the CRUD test cleaned up its temporary row.",
         4: "B04 and E04 passed. Both issuers were accepted. Missing and invalid tokens returned 401.",
-        5: "B05 and E05 passed. The buckets, report PDF and public avatar URL http://localhost:9000/profile-pics/avatar.jpg returned HTTP 200.",
+        5: "B05 and E05 passed. The demo, profile-pics and documents buckets were created. Authenticated download of documents/bao-cao.pdf verified the 26-page final report with all three student IDs (524H0167, 524H0169, 524H0050), and public URL http://localhost:9000/profile-pics/avatar.jpg returned HTTP 200 (image/jpeg).",
         6: "B06 and E06 passed. All four A records returned the expected addresses.",
         7: "B07 and E07 passed. The three jobs were up and the Nginx request counter was collected.",
-        8: "B08 and E08 passed. Grafana listed both provisioned dashboards and displayed live Node Exporter time-series curves across CPU Usage (%) (0.8–1.6%), Memory Usage (~2.0 GiB used, 13.3 GiB available) and Network Traffic (861 B/s on eth0) in System Health of 524H0167.",
+        8: "B08 and E08 passed. Grafana listed both provisioned dashboards via API. Local observation. The System Health of 524H0167 dashboard screenshot (Last 5 minutes window) confirms live Node Exporter time-series curves across CPU Usage (%) (0.8–1.6%), Memory Usage (~2.0 GiB used, 13.3 GiB available) and Network Traffic (861 B/s on eth0).",
         9: "B09, E09 and E10 passed. The gateway served the student list and alternated web nodes.",
     }
     passed = {
